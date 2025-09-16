@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Online Calculators</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: #4cd7d0;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #4cd7d0;
+        }
+
+        .calculator-wrapper {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            max-width: 500px;
+        }
+
+        .calculator-display {
+            background: #f1f1f1;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: right;
+            font-size: 24px;
+            min-height: 60px;
+            overflow: auto;
+            border: 1px solid #ddd;
+        }
+
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .calc-btn {
+            padding: 12px 5px;
+            border: none;
+            border-radius: 6px;
+            background: #4a6491;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .calc-btn:hover {
+            background: #2c3e50;
+        }
+
+        .calc-btn.operator {
+            background: #2c3e50;
+        }
+
+        .calc-btn.operator:hover {
+            background: #1a2536;
+        }
+
+        .calc-btn.function {
+            background: #4cd7d0;
+            color: #333;
+        }
+
+        .calc-btn.function:hover {
+            background: #3bbfb8;
+        }
+
+        .calc-btn.equals {
+            background: #ff6b6b;
+        }
+
+        .calc-btn.equals:hover {
+            background: #ff5252;
+        }
+
+        .search-bar {
+            margin: 25px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar input {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar button {
+            margin-left: 10px;
+            padding: 15px 25px;
+            background: #4a6491;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .search-bar button:hover {
+            background: #2c3e50;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .category {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f1f1;
+        }
+
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4a6491, #2c3e50);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .category-icon i {
+            color: white;
+            font-size: 22px;
+        }
+
+        .category h2 {
+            color: #2c3e50;
+            font-size: 22px;
+        }
+
+        .calculator-list {
+            list-style: none;
+        }
+
+        .calculator-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .calculator-list li:last-child {
+            border-bottom: none;
+        }
+
+        .calculator-list a {
+            color: #4a6491;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+
+        .calculator-list a:hover {
+            color: #4cd7d0;
+        }
+
+        .calculator-list i {
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #6c757d;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+        }
+
+        .modal-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f1f1;
+        }
+
+        .policy-section {
+            margin-bottom: 25px;
+        }
+
+        .policy-section h3 {
+            color: #4a6491;
+            margin-bottom: 10px;
+        }
+
+        .policy-section p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .contact-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group-full {
+            grid-column: 1 / span 2;
+        }
+
+        .submit-btn {
+            background: #4a6491;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #2c3e50;
+        }
+
+        /* Legal Links */
+        .legal-links {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px 0;
+        }
+
+        .legal-links a {
+            color: #4a6491;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+
+        .legal-links a:hover {
+            color: #4cd7d0;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+            
+            .calculator-buttons {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            
+            .calc-btn {
+                padding: 10px 5px;
+                font-size: 14px;
+            }
+            
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group-full {
+                grid-column: 1;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Free Online <span>Calculator</span> <i class="fas fa-calculator"></i></h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-star"></i> Popular</a></li>
+                        <li><a href="#"><i class="fas fa-clock"></i> Recent</a></li>
+                        <li><a href="#" id="privacyLink"><i class="fas fa-shield-alt"></i> Privacy</a></li>
+                        <li><a href="#" id="contactLink"><i class="fas fa-envelope"></i> Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Scientific Calculator -->
+        <div class="calculator-wrapper">
+            <div class="calculator-display" id="display">0</div>
+            <div class="calculator-buttons">
+                <button class="calc-btn function" onclick="appendToDisplay('sin')">sin</button>
+                <button class="calc-btn function" onclick="appendToDisplay('cos')">cos</button>
+                <button class="calc-btn function" onclick="appendToDisplay('tan')">tan</button>
+                <button class="calc-btn function" onclick="setDegrees()">Deg</button>
+                <button class="calc-btn function" onclick="setRadians()">Rad</button>
+                <button class="calc-btn" onclick="appendToDisplay('7')">7</button>
+                <button class="calc-btn" onclick="appendToDisplay('8')">8</button>
+                <button class="calc-btn" onclick="appendToDisplay('9')">9</button>
+                <button class="calc-btn operator" onclick="appendToDisplay('+')">+</button>
+                <button class="calc-btn function" onclick="backspace()">Back</button>
+
+                <button class="calc-btn function" onclick="appendToDisplay('asin')">sin<sup>-1</sup></button>
+                <button class="calc-btn function" onclick="appendToDisplay('acos')">cos<sup>-1</sup></button>
+                <button class="calc-btn function" onclick="appendToDisplay('atan')">tan<sup>-1</sup></button>
+                <button class="calc-btn function" onclick="appendToDisplay('π')">π</button>
+                <button class="calc-btn function" onclick="appendToDisplay('e')">e</button>
+                <button class="calc-btn" onclick="appendToDisplay('4')">4</button>
+                <button class="calc-btn" onclick="appendToDisplay('5')">5</button>
+                <button class="calc-btn" onclick="appendToDisplay('6')">6</button>
+                <button class="calc-btn operator" onclick="appendToDisplay('-')">–</button>
+                <button class="calc-btn function" onclick="useAnswer()">Ans</button>
+
+                <button class="calc-btn function" onclick="appendToDisplay('^')">x<sup>y</sup></button>
+                <button class="calc-btn function" onclick="appendToDisplay('**3')">x<sup>3</sup></button>
+                <button class="calc-btn function" onclick="appendToDisplay('**2')">x<sup>2</sup></button>
+                <button class="calc-btn function" onclick="appendToDisplay('exp(')">e<sup>x</sup></button>
+                <button class="calc-btn function" onclick="appendToDisplay('10**')">10<sup>x</sup></button>
+                <button class="calc-btn" onclick="appendToDisplay('1')">1</button>
+                <button class="calc-btn" onclick="appendToDisplay('2')">2</button>
+                <button class="calc-btn" onclick="appendToDisplay('3')">3</button>
+                <button class="calc-btn operator" onclick="appendToDisplay('*')">×</button>
+                <button class="calc-btn function" onclick="memoryAdd()">M+</button>
+
+                <button class="calc-btn function" onclick="nthRoot()">y√x</button>
+                <button class="calc-btn function" onclick="appendToDisplay('Math.cbrt(')">∛x</button>
+                <button class="calc-btn function" onclick="appendToDisplay('Math.sqrt(')">√x</button>
+                <button class="calc-btn function" onclick="appendToDisplay('Math.log(')">ln</button>
+                <button class="calc-btn function" onclick="appendToDisplay('Math.log10(')">log</button>
+                <button class="calc-btn" onclick="appendToDisplay('0')">0</button>
+                <button class="calc-btn" onclick="appendToDisplay('.')">.</button>
+                <button class="calc-btn function" onclick="appendToDisplay('e+')">EXP</button>
+                <button class="calc-btn operator" onclick="appendToDisplay('/')">/</button>
+                <button class="calc-btn function" onclick="memorySubtract()">M-</button>
+
+                <button class="calc-btn" onclick="appendToDisplay('(')">(</button>
+                <button class="calc-btn" onclick="appendToDisplay(')')">)</button>
+                <button class="calc-btn function" onclick="reciprocal()">1/x</button>
+                <button class="calc-btn function" onclick="appendToDisplay('%')">%</button>
+                <button class="calc-btn function" onclick="factorial()">n!</button>
+                <button class="calc-btn function" onclick="toggleSign()">±</button>
+                <button class="calc-btn function" onclick="randomNumber()">RND</button>
+                <button class="calc-btn function" onclick="clearDisplay()">AC</button>
+                <button class="calc-btn equals" onclick="calculate()">=</button>
+                <button class="calc-btn function" onclick="memoryRecall()">MR</button>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Search for calculators...">
+            <button><i class="fas fa-search"></i> Search</button>
+        </div>
+
+        <div class="calculator-grid">
+            <!-- Financial Calculators -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h2>Financial Calculators</h2>
+                </div>
+                <ul class="calculator-list">
+                    <li><a href="#"><i class="fas fa-calculator"></i> Mortgage Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Auto Loan Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Payment Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Amortization Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Currency Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Income Tax Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Salary Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Interest Rate Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> House Affordability Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Retirement Calculator</a></li>
+                </ul>
+            </div>
+
+            <!-- Fitness & Health Calculators -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h2>Fitness & Health Calculators</h2>
+                </div>
+                <ul class="calculator-list">
+                    <li><a href="#"><i class="fas fa-calculator"></i> BMI Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Body Fat Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Macro Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Pregnancy Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Pregnancy Conception Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Pace Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Carbohydrate Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Healthy Weight Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Protein Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Target Heart Rate Calculator</a></li>
+                </ul>
+            </div>
+
+            <!-- Math Calculators -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-square-root-alt"></i>
+                    </div>
+                    <h2>Math Calculators</h2>
+                </div>
+                <ul class="calculator-list">
+                    <li><a href="#"><i class="fas fa-calculator"></i> Scientific Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Percentage Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Volume Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Random Number Generator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Percent Error Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Binary Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Slope Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Area Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Probability Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Standard Deviation Calculator</a></li>
+                </ul>
+            </div>
+
+            <!-- Other Calculators -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-shapes"></i>
+                    </div>
+                    <h2>Other Calculators</h2>
+                </div>
+                <ul class="calculator-list">
+                    <li><a href="#"><i class="fas fa-calculator"></i> Age Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Time Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> GPA Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Loan Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Interest Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Investment Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Inflation Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Date Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Grade Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Password Generator</a></li>
+                </ul>
+            </div>
+
+            <!-- Additional categories with more calculators -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h2>Investment Calculators</h2>
+                </div>
+                <ul class="calculator-list">
+                    <li><a href="#"><i class="fas fa-calculator"></i> Compound Interest Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> 401K Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> ROI Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Savings Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> IRA Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Bond Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Annuity Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> CD Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Present Value Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Future Value Calculator</a></li>
+                </ul>
+            </div>
+
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h2>Nutrition Calculators</h2>
+                </div>
+                <ul class="calculator-list">
+                    <li><a href="#"><i class="fas fa-calculator"></i> Calorie Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> BMR Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Macro Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Meal Planner Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Water Intake Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> BMI Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Ideal Weight Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Body Fat Percentage Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Weight Loss Calculator</a></li>
+                    <li><a href="#"><i class="fas fa-calculator"></i> Weight Gain Calculator</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="modal-title">Privacy Policy</h2>
+            
+            <div class="policy-section">
+                <h3>1. Introduction</h3>
+                <p>Welcome to Free Online Calculator ("we," "our," or "us"). We are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, and safeguard your information when you use our website and services.</p>
+            </div>
+            
+            <div class="policy-section">
+                <h3>2. Information We Collect</h3>
+                <p>We collect minimal information to provide and improve our services:</p>
+                <p><strong>Personal Information:</strong> When you contact us, we may collect your name and email address.</p>
+                <p><strong>Usage Data:</strong> We collect information about how you interact with our website, including IP address, browser type, pages visited, and time spent on the site.</p>
+                <p><strong>Cookies:</strong> We use cookies to enhance your experience and analyze site traffic.</p>
+            </div>
+            
+            <div class="policy-section">
+                <h3>3. How We Use Your Information</h3>
+                <p>We use the information we collect for the following purposes:</p>
+                <p>- To provide and maintain our services</p>
+                <p>- To improve user experience</p>
+                <p>- To respond to your inquiries and provide customer support</p>
+                <p>- To analyze website usage and trends</p>
+                <p>- To ensure the security of our website</p>
+            </div>
+            
+            <div class="policy-section">
+                <h3>4. Data Security</h3>
+                <p>We implement appropriate security measures to protect your personal information. However, please note that no method of transmission over the Internet or electronic storage is 100% secure.</p>
+            </div>
+            
+            <div class="policy-section">
+                <h3>5. Third-Party Services</h3>
+                <p>We may use third-party services, such as analytics providers, that collect, monitor, and analyze user behavior to improve our services. These third parties have their own privacy policies addressing how they use such information.</p>
+            </div>
+            
+            <div class="policy-section">
+                <h3>6. Your Rights</h3>
+                <p>You have the right to:</p>
+                <p>- Access the personal information we hold about you</p>
+                <p>- Request correction of inaccurate information</p>
+                <p>- Request deletion of your personal information</p>
+                <p>- Object to processing of your personal information</p>
+                <p>- Request data portability</p>
+            </div>
+            
+            <div class="policy-section">
+                <h3>7. Children's Privacy</h3>
+                <p>Our services are not intended for children under 13. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and believe your child has provided us with personal information, please contact us.</p>
+            </div>
+            
+            <div class="policy-section">
+                <h3>8. Changes to This Privacy Policy</h3>
+                <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.</p>
+            </div>
+            
+            <div class="policy-section">
+                <h3>9. Contact Us</h3>
+                <p>If you have any questions about this Privacy Policy, please contact us using the contact form on our website.</p>
+            </div>
+            
+            <p><strong>Last Updated:</strong> October 10, 2023</p>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="modal-title">Contact Us</h2>
+            <p>Have questions, suggestions, or need support? Fill out the form below and we'll get back to you as soon as possible.</p>
+            
+            <form class="contact-form" id="contactForm">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <select id="subject" name="subject" required>
+                        <option value="">Select a subject</option>
+                        <option value="general">General Inquiry</option>
+                        <option value="support">Technical Support</option>
+                        <option value="suggestion">Feature Suggestion</option>
+                        <option value="bug">Report a Bug</option>
+                        <option value="partnership">Partnership Opportunity</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group form-group-full">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                
+                <div class="form-group form-group-full">
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </div>
+            </form>
+            
+            <div class="contact-info" style="margin-top: 30px;">
+                <h3>Other Ways to Reach Us</h3>
+                <p><i class="fas fa-envelope"></i> Email: support@freeonlinecalculator.com</p>
+                <p><i class="fas fa-clock"></i> Response Time: We typically respond within 24-48 hours</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="legal-links">
+            <a href="#" id="footerPrivacyLink">Privacy Policy</a>
+            <a href="#" id="footerContactLink">Contact Us</a>
+            <a href="#">Terms of Service</a>
+        </div>
+        <p>© 2023 Free Online Calculator. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Calculator functionality
+        let displayValue = '0';
+        let previousAnswer = 0;
+        let memory = 0;
+        let isRadians = true;
+
+        function updateDisplay() {
+            const display = document.getElementById('display');
+            display.textContent = displayValue;
+        }
+
+        function appendToDisplay(value) {
+            if (displayValue === '0' && value !== '.') {
+                displayValue = value;
+            } else {
+                displayValue += value;
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            displayValue = '0';
+            updateDisplay();
+        }
+
+        function backspace() {
+            if (displayValue.length > 1) {
+                displayValue = displayValue.slice(0, -1);
+            } else {
+                displayValue = '0';
+            }
+            updateDisplay();
+        }
+
+        function calculate() {
+            try {
+                // Replace special constants and functions
+                let expression = displayValue
+                    .replace(/π/g, Math.PI)
+                    .replace(/e/g, Math.E)
+                    .replace(/sin/g, isRadians ? 'Math.sin' : 'Math.sin(Math.PI/180*')
+                    .replace(/cos/g, isRadians ? 'Math.cos' : 'Math.cos(Math.PI/180*')
+                    .replace(/tan/g, isRadians ? 'Math.tan' : 'Math.tan(Math.PI/180*')
+                    .replace(/asin/g, isRadians ? 'Math.asin' : '180/Math.PI*Math.asin')
+                    .replace(/acos/g, isRadians ? 'Math.acos' : '180/Math.PI*Math.acos')
+                    .replace(/atan/g, isRadians ? 'Math.atan' : '180/Math.PI*Math.atan')
+                    .replace(/\^/g, '**');
+                
+                // Evaluate the expression
+                previousAnswer = eval(expression);
+                displayValue = previousAnswer.toString();
+                updateDisplay();
+            } catch (error) {
+                displayValue = 'Error';
+                updateDisplay();
+                setTimeout(() => {
+                    displayValue = '0';
+                    updateDisplay();
+                }, 1500);
+            }
+        }
+
+        function useAnswer() {
+            displayValue += previousAnswer.toString();
+            updateDisplay();
+        }
+
+        function setDegrees() {
+            isRadians = false;
+            document.getElementById('display').textContent += " DEG";
+        }
+
+        function setRadians() {
+            isRadians = true;
+            document.getElementById('display').textContent += " RAD";
+        }
+
+        function memoryAdd() {
+            memory += parseFloat(displayValue);
+            displayValue = '0';
+            updateDisplay();
+        }
+
+        function memorySubtract() {
+            memory -= parseFloat(displayValue);
+            displayValue = '0';
+            updateDisplay();
+        }
+
+        function memoryRecall() {
+            displayValue = memory.toString();
+            updateDisplay();
+        }
+
+        function factorial() {
+            let num = parseFloat(displayValue);
+            if (num < 0 || !Number.isInteger(num)) {
+                displayValue = 'Error';
+                updateDisplay();
+                setTimeout(() => {
+                    displayValue = '0';
+                    updateDisplay();
+                }, 1500);
+                return;
+            }
+            
+            let result = 1;
+            for (let i = 2; i <= num; i++) {
+                result *= i;
+            }
+            displayValue = result.toString();
+            updateDisplay();
+        }
+
+        function reciprocal() {
+            let num = parseFloat(displayValue);
+            if (num === 0) {
+                displayValue = 'Error';
+                updateDisplay();
+                setTimeout(() => {
+                    displayValue = '0';
+                    updateDisplay();
+                }, 1500);
+                return;
+            }
+            displayValue = (1 / num).toString();
+            updateDisplay();
+        }
+
+        function toggleSign() {
+            if (displayValue !== '0') {
+                if (displayValue.charAt(0) === '-') {
+                    displayValue = displayValue.substring(1);
+                } else {
+                    displayValue = '-' + displayValue;
+                }
+                updateDisplay();
+            }
+        }
+
+        function randomNumber() {
+            displayValue = Math.random().toString();
+            updateDisplay();
+        }
+
+        function nthRoot() {
+            displayValue += '**(1/';
+            updateDisplay();
+        }
+
+        // Modal functionality
+        const privacyModal = document.getElementById('privacyModal');
+        const contactModal = document.getElementById('contactModal');
+        const privacyLink = document.getElementById('privacyLink');
+        const contactLink = document.getElementById('contactLink');
+        const footerPrivacyLink = document.getElementById('footerPrivacyLink');
+        const footerContactLink = document.getElementById('footerContactLink');
+        const closeButtons = document.querySelectorAll('.close');
+
+        // Open modals
+        privacyLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            privacyModal.style.display = 'block';
+        });
+
+        contactLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            contactModal.style.display = 'block';
+        });
+
+        footerPrivacyLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            privacyModal.style.display = 'block';
+        });
+
+        footerContactLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            contactModal.style.display = 'block';
+        });
+
+        // Close modals
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                privacyModal.style.display = 'none';
+                contactModal.style.display = 'none';
+            });
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target == privacyModal) {
+                privacyModal.style.display = 'none';
+            }
+            if (event.target == contactModal) {
+                contactModal.style.display = 'none';
+            }
+        });
+
+        // Contact form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            contactModal.style.display = 'none';
+            this.reset();
+        });
+
+        // Simple search functionality
+        document.querySelector('.search-bar button').addEventListener('click', function() {
+            const searchTerm = document.querySelector('.search-bar input').value.toLowerCase();
+            if (searchTerm) {
+                alert(`Searching for: ${searchTerm}\nThis is a demo. In a real application, this would filter the calculators.`);
+            }
+        });
+
+        // Add animation to category cards
+        document.querySelectorAll('.category').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.12)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.08)';
+            });
+        });
+
+        // Initialize display
+        updateDisplay();
+    </script>
+</body>
+</html>
