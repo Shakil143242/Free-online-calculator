@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interest Rate Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .calculator-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .result-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            background: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+        
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin-top: 5px;
+        }
+        
+        .slider-value {
+            text-align: center;
+            font-weight: 600;
+            color: #3498db;
+            margin-top: 5px;
+            background: #eef7ff;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .result-box {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .total-amount {
+            font-size: 3rem;
+            color: #2c3e50;
+            font-weight: 700;
+            margin: 15px 0;
+        }
+        
+        .result-label {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+        
+        .result-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .detail-box {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .detail-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .chart-section {
+            width: 100%;
+            padding: 30px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .comparison-table th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .comparison-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-container {
+                flex-direction: column;
+            }
+            
+            .total-amount {
+                font-size: 2.2rem;
+            }
+        }
+        
+        .icon {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .formula-box {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .formula-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-percentage icon"></i>Interest Rate Calculator</h1>
+            <p class="subtitle">Calculate simple and compound interest with detailed breakdown</p>
+        </header>
+        
+        <div class="calculator-container">
+            <div class="input-section">
+                <div class="tabs">
+                    <div class="tab active" id="simple-tab">Simple Interest</div>
+                    <div class="tab" id="compound-tab">Compound Interest</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="principalAmount"><i class="fas fa-dollar-sign icon"></i>Principal Amount ($)</label>
+                    <input type="number" id="principalAmount" min="100" max="10000000" step="1000" value="10000">
+                    <input type="range" id="principalAmountSlider" min="100" max="10000000" step="1000" value="10000">
+                    <div class="slider-value" id="principalAmountValue">$10,000</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="interestRate"><i class="fas fa-percent icon"></i>Interest Rate (% per year)</label>
+                    <input type="number" id="interestRate" min="0.1" max="30" step="0.1" value="5">
+                    <input type="range" id="interestRateSlider" min="0.1" max="30" step="0.1" value="5">
+                    <div class="slider-value" id="interestRateValue">5%</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="timePeriod"><i class="fas fa-clock icon"></i>Time Period (years)</label>
+                    <input type="number" id="timePeriod" min="1" max="50" step="1" value="10">
+                    <input type="range" id="timePeriodSlider" min="1" max="50" step="1" value="10">
+                    <div class="slider-value" id="timePeriodValue">10 years</div>
+                </div>
+                
+                <div class="input-group" id="compoundFrequencyGroup">
+                    <label for="compoundFrequency"><i class="fas fa-sync-alt icon"></i>Compound Frequency</label>
+                    <select id="compoundFrequency">
+                        <option value="1">Annually</option>
+                        <option value="2">Semi-Annually</option>
+                        <option value="4">Quarterly</option>
+                        <option value="12" selected>Monthly</option>
+                        <option value="365">Daily</option>
+                    </select>
+                </div>
+                
+                <button id="calculateBtn"><i class="fas fa-calculator icon"></i>Calculate Interest</button>
+                
+                <div class="formula-box">
+                    <div class="formula-title" id="formulaTitle">Simple Interest Formula: P × r × t</div>
+                    <div id="formulaDescription">Where P is Principal, r is Annual Rate, and t is Time in years</div>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <div class="result-box">
+                    <p class="result-label">Total Amount</p>
+                    <div class="total-amount" id="totalAmount">$15,000</div>
+                    <p class="result-label">After <span id="timeResult">10</span> years</p>
+                </div>
+                
+                <div class="result-details">
+                    <div class="detail-box">
+                        <div class="detail-value" id="interestEarned">$5,000</div>
+                        <div class="detail-label">Interest Earned</div>
+                    </div>
+                    <div class="detail-box">
+                        <div class="detail-value" id="returnPercentage">50%</div>
+                        <div class="detail-label">Return on Investment</div>
+                    </div>
+                </div>
+                
+                <div class="result-details">
+                    <div class="detail-box">
+                        <div class="detail-value" id="annualReturn">$500</div>
+                        <div class="detail-label">Avg. Annual Return</div>
+                    </div>
+                    <div class="detail-box">
+                        <div class="detail-value" id="monthlyReturn">$41.67</div>
+                        <div class="detail-label">Avg. Monthly Return</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-section">
+            <h2><i class="fas fa-chart-line icon"></i>Growth Over Time</h2>
+            <div class="chart-container">
+                <canvas id="growthChart"></canvas>
+            </div>
+            
+            <h2><i class="fas fa-table icon"></i>Yearly Breakdown</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Principal</th>
+                        <th>Interest</th>
+                        <th>Total Interest</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody id="yearlyBreakdown">
+                    <!-- Results will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all input elements
+            const principalAmount = document.getElementById('principalAmount');
+            const principalAmountSlider = document.getElementById('principalAmountSlider');
+            const principalAmountValue = document.getElementById('principalAmountValue');
+            
+            const interestRate = document.getElementById('interestRate');
+            const interestRateSlider = document.getElementById('interestRateSlider');
+            const interestRateValue = document.getElementById('interestRateValue');
+            
+            const timePeriod = document.getElementById('timePeriod');
+            const timePeriodSlider = document.getElementById('timePeriodSlider');
+            const timePeriodValue = document.getElementById('timePeriodValue');
+            
+            const compoundFrequency = document.getElementById('compoundFrequency');
+            const compoundFrequencyGroup = document.getElementById('compoundFrequencyGroup');
+            
+            const calculateBtn = document.getElementById('calculateBtn');
+            
+            const totalAmount = document.getElementById('totalAmount');
+            const timeResult = document.getElementById('timeResult');
+            const interestEarned = document.getElementById('interestEarned');
+            const returnPercentage = document.getElementById('returnPercentage');
+            const annualReturn = document.getElementById('annualReturn');
+            const monthlyReturn = document.getElementById('monthlyReturn');
+            
+            const formulaTitle = document.getElementById('formulaTitle');
+            const formulaDescription = document.getElementById('formulaDescription');
+            
+            const yearlyBreakdown = document.getElementById('yearlyBreakdown');
+            
+            const simpleTab = document.getElementById('simple-tab');
+            const compoundTab = document.getElementById('compound-tab');
+            
+            let isCompound = false;
+            let growthChart = null;
+            
+            // Initially hide compound frequency for simple interest
+            compoundFrequencyGroup.style.display = 'none';
+            
+            // Sync slider and input values
+            function syncInputAndSlider(input, slider, valueDisplay, formatFunc) {
+                input.addEventListener('input', function() {
+                    slider.value = this.value;
+                    valueDisplay.textContent = formatFunc(this.value);
+                    calculateInterest();
+                });
+                
+                slider.addEventListener('input', function() {
+                    input.value = this.value;
+                    valueDisplay.textContent = formatFunc(this.value);
+                    calculateInterest();
+                });
+            }
+            
+            // Format currency
+            function formatCurrency(value) {
+                return '$' + Number(value).toLocaleString('en-US');
+            }
+            
+            // Format percentage
+            function formatPercentage(value) {
+                return value + '%';
+            }
+            
+            // Format years
+            function formatYears(value) {
+                return value + ' years';
+            }
+            
+            // Initialize sync
+            syncInputAndSlider(principalAmount, principalAmountSlider, principalAmountValue, formatCurrency);
+            syncInputAndSlider(interestRate, interestRateSlider, interestRateValue, formatPercentage);
+            syncInputAndSlider(timePeriod, timePeriodSlider, timePeriodValue, formatYears);
+            
+            // Tab switching
+            simpleTab.addEventListener('click', function() {
+                simpleTab.classList.add('active');
+                compoundTab.classList.remove('active');
+                isCompound = false;
+                compoundFrequencyGroup.style.display = 'none';
+                formulaTitle.textContent = 'Simple Interest Formula: P × r × t';
+                formulaDescription.textContent = 'Where P is Principal, r is Annual Rate, and t is Time in years';
+                calculateInterest();
+            });
+            
+            compoundTab.addEventListener('click', function() {
+                compoundTab.classList.add('active');
+                simpleTab.classList.remove('active');
+                isCompound = true;
+                compoundFrequencyGroup.style.display = 'block';
+                formulaTitle.textContent = 'Compound Interest Formula: P(1 + r/n)^(nt)';
+                formulaDescription.textContent = 'Where P is Principal, r is Annual Rate, n is Compound Frequency, and t is Time in years';
+                calculateInterest();
+            });
+            
+            // Additional input listeners
+            compoundFrequency.addEventListener('change', calculateInterest);
+            
+            // Calculate interest function
+            function calculateInterest() {
+                const principal = parseFloat(principalAmount.value);
+                const rate = parseFloat(interestRate.value) / 100;
+                const time = parseFloat(timePeriod.value);
+                
+                let total, interest;
+                
+                if (isCompound) {
+                    const n = parseFloat(compoundFrequency.value);
+                    total = principal * Math.pow(1 + rate/n, n*time);
+                    interest = total - principal;
+                } else {
+                    interest = principal * rate * time;
+                    total = principal + interest;
+                }
+                
+                // Update UI
+                totalAmount.textContent = formatCurrency(total.toFixed(2));
+                timeResult.textContent = time;
+                interestEarned.textContent = formatCurrency(interest.toFixed(2));
+                
+                const returnPct = ((interest / principal) * 100).toFixed(2);
+                returnPercentage.textContent = returnPct + '%';
+                
+                annualReturn.textContent = formatCurrency((interest / time).toFixed(2));
+                monthlyReturn.textContent = formatCurrency((interest / (time * 12)).toFixed(2));
+                
+                // Generate yearly breakdown
+                generateYearlyBreakdown(principal, rate, time);
+                
+                // Update chart
+                updateChart(principal, rate, time);
+            }
+            
+            // Generate yearly breakdown
+            function generateYearlyBreakdown(principal, rate, time) {
+                yearlyBreakdown.innerHTML = '';
+                
+                let runningTotal = principal;
+                
+                for (let year = 1; year <= time; year++) {
+                    let yearInterest;
+                    
+                    if (isCompound) {
+                        const n = parseFloat(compoundFrequency.value);
+                        const prevTotal = runningTotal;
+                        runningTotal = principal * Math.pow(1 + rate/n, n*year);
+                        yearInterest = runningTotal - prevTotal;
+                    } else {
+                        yearInterest = principal * rate;
+                        runningTotal += yearInterest;
+                    }
+                    
+                    const totalInterest = runningTotal - principal;
+                    
+                    const row = yearlyBreakdown.insertRow();
+                    row.insertCell(0).textContent = year;
+                    row.insertCell(1).textContent = formatCurrency(principal.toFixed(2));
+                    row.insertCell(2).textContent = formatCurrency(yearInterest.toFixed(2));
+                    row.insertCell(3).textContent = formatCurrency(totalInterest.toFixed(2));
+                    row.insertCell(4).textContent = formatCurrency(runningTotal.toFixed(2));
+                }
+            }
+            
+            // Update chart
+            function updateChart(principal, rate, time) {
+                const ctx = document.getElementById('growthChart').getContext('2d');
+                
+                // Destroy previous chart if it exists
+                if (growthChart) {
+                    growthChart.destroy();
+                }
+                
+                // Prepare data
+                const years = [];
+                const amounts = [];
+                
+                for (let year = 0; year <= time; year++) {
+                    years.push(year);
+                    
+                    if (isCompound) {
+                        const n = parseFloat(compoundFrequency.value);
+                        amounts.push(principal * Math.pow(1 + rate/n, n*year));
+                    } else {
+                        amounts.push(principal + (principal * rate * year));
+                    }
+                }
+                
+                // Create new chart
+                growthChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: years,
+                        datasets: [{
+                            label: 'Investment Growth',
+                            data: amounts,
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Projected Investment Growth Over Time'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'Balance: ' + formatCurrency(context.raw.toFixed(2));
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Initial calculation
+            calculateInterest();
+            
+            // Add event listener to calculate button
+            calculateBtn.addEventListener('click', calculateInterest);
+        });
+    </script>
+</body>
+</html>
