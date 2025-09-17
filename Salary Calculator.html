@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .calculator-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 350px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .result-section {
+            flex: 1;
+            min-width: 350px;
+            padding: 30px;
+            background: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .input-row .input-group {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input[type="number"], input[type="range"] {
+            width: 100%;
+        }
+        
+        input[type="number"] {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            background: white;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 5px;
+        }
+        
+        .slider-value {
+            text-align: center;
+            font-weight: 600;
+            color: #3498db;
+            min-width: 80px;
+            padding: 5px;
+            background: #f0f8ff;
+            border-radius: 5px;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .result-box {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .net-salary {
+            font-size: 3rem;
+            color: #2c3e50;
+            font-weight: 700;
+            margin: 15px 0;
+        }
+        
+        .result-label {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+        
+        .breakdown {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        
+        .breakdown-label {
+            color: #7f8c8d;
+        }
+        
+        .breakdown-value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .deduction {
+            color: #e74c3c;
+        }
+        
+        .summary-cards {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .summary-card {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+        
+        .summary-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #3498db;
+            border-radius: 4px;
+        }
+        
+        .chart-container {
+            height: 200px;
+            margin: 20px 0;
+            display: flex;
+            align-items: flex-end;
+            gap: 5px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            background: #3498db;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            position: relative;
+            min-width: 5px;
+            transition: height 0.5s ease;
+        }
+        
+        .chart-bar-label {
+            position: absolute;
+            bottom: -25px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-container {
+                flex-direction: column;
+            }
+            
+            .net-salary {
+                font-size: 2.2rem;
+            }
+            
+            .input-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .summary-card {
+                min-width: 100%;
+            }
+        }
+        
+        .icon {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .tax-info {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .toggle-breakdown {
+            background: none;
+            border: none;
+            color: #3498db;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            color: #7f8c8d;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #2c3e50;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+            font-weight: normal;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .savings-highlight {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 8px;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-money-bill-wave icon"></i>Salary Calculator</h1>
+            <p class="subtitle">Calculate your take-home pay after taxes and deductions</p>
+        </header>
+        
+        <div class="calculator-container">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="salary">
+                        <i class="fas fa-dollar-sign icon"></i>Annual Salary ($)
+                        <span class="tooltip">
+                            <i class="fas fa-question-circle"></i>
+                            <span class="tooltiptext">Enter your gross annual salary before taxes and deductions</span>
+                        </span>
+                    </label>
+                    <input type="number" id="salary" min="10000" max="1000000" step="5000" value="60000">
+                    <div class="slider-container">
+                        <input type="range" id="salarySlider" min="10000" max="1000000" step="5000" value="60000">
+                        <div class="slider-value" id="salaryValue">$60,000</div>
+                    </div>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="payFrequency"><i class="fas fa-calendar-alt icon"></i>Pay Frequency</label>
+                        <select id="payFrequency">
+                            <option value="52">Weekly</option>
+                            <option value="26">Bi-weekly</option>
+                            <option value="24">Semi-monthly</option>
+                            <option value="12" selected>Monthly</option>
+                            <option value="1">Annual</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="filingStatus"><i class="fas fa-user icon"></i>Filing Status</label>
+                        <select id="filingStatus">
+                            <option value="single">Single</option>
+                            <option value="married" selected>Married</option>
+                            <option value="head">Head of Household</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="state"><i class="fas fa-map-marker-alt icon"></i>State</label>
+                    <select id="state">
+                        <option value="0" selected>Select State</option>
+                        <option value="0">Texas (No state income tax)</option>
+                        <option value="5">California (~5%)</option>
+                        <option value="5.75">New York (~5.75%)</option>
+                        <option value="4.75">Illinois (~4.75%)</option>
+                        <option value="3.07">Pennsylvania (~3.07%)</option>
+                        <option value="2.5">Arizona (~2.5%)</option>
+                        <option value="4.25">Colorado (~4.25%)</option>
+                        <option value="3.23">Michigan (~3.23%)</option>
+                        <option value="5.35">Minnesota (~5.35%)</option>
+                        <option value="3">Indiana (~3%)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="retirement">
+                        <i class="fas fa-piggy-bank icon"></i>Retirement Contribution (%)
+                        <span class="tooltip">
+                            <i class="fas fa-question-circle"></i>
+                            <span class="tooltiptext">Percentage of your salary contributed to retirement accounts</span>
+                        </span>
+                    </label>
+                    <input type="number" id="retirement" min="0" max="30" step="1" value="5">
+                    <div class="slider-container">
+                        <input type="range" id="retirementSlider" min="0" max="30" step="1" value="5">
+                        <div class="slider-value" id="retirementValue">5%</div>
+                    </div>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="healthInsurance">
+                            <i class="fas fa-heartbeat icon"></i>Health Insurance ($/month)
+                            <span class="tooltip">
+                                <i class="fas fa-question-circle"></i>
+                                <span class="tooltiptext">Monthly cost of health insurance premiums</span>
+                            </span>
+                        </label>
+                        <input type="number" id="healthInsurance" min="0" max="2000" step="50" value="200">
+                        <div class="slider-container">
+                            <input type="range" id="healthInsuranceSlider" min="0" max="2000" step="50" value="200">
+                            <div class="slider-value" id="healthInsuranceValue">$200</div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="otherDeductions">
+                            <i class="fas fa-minus-circle icon"></i>Other Deductions ($/month)
+                            <span class="tooltip">
+                                <i class="fas fa-question-circle"></i>
+                                <span class="tooltiptext">Other monthly deductions (HSA, FSA, etc.)</span>
+                            </span>
+                        </label>
+                        <input type="number" id="otherDeductions" min="0" max="2000" step="50" value="100">
+                        <div class="slider-container">
+                            <input type="range" id="otherDeductionsSlider" min="0" max="2000" step="50" value="100">
+                            <div class="slider-value" id="otherDeductionsValue">$100</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="calculateBtn"><i class="fas fa-calculator icon"></i>Calculate Salary</button>
+            </div>
+            
+            <div class="result-section">
+                <div class="result-box">
+                    <p class="result-label">Your Take-Home Pay</p>
+                    <div class="net-salary" id="netSalary">$3,800</div>
+                    <p class="result-label" id="payFrequencyLabel">per month</p>
+                </div>
+                
+                <div class="breakdown">
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Gross Income</span>
+                        <span class="breakdown-value" id="grossIncome">$5,000</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Federal Tax</span>
+                        <span class="breakdown-value deduction" id="federalTax">-$800</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">State Tax</span>
+                        <span class="breakdown-value deduction" id="stateTax">-$0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Social Security Tax</span>
+                        <span class="breakdown-value deduction" id="socialSecurityTax">-$310</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Medicare Tax</span>
+                        <span class="breakdown-value deduction" id="medicareTax">-$72.50</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Retirement Contribution</span>
+                        <span class="breakdown-value deduction" id="retirementContribution">-$250</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Health Insurance</span>
+                        <span class="breakdown-value deduction" id="healthInsuranceDeduction">-$200</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Other Deductions</span>
+                        <span class="breakdown-value deduction" id="otherDeductionsDisplay">-$100</span>
+                    </div>
+                </div>
+                
+                <button class="toggle-breakdown" id="toggleBreakdown">
+                    <i class="fas fa-chevron-down"></i> Show Yearly Breakdown
+                </button>
+                
+                <div class="breakdown hidden" id="yearlyBreakdown">
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Annual Gross Income</span>
+                        <span class="breakdown-value" id="annualGrossIncome">$60,000</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Annual Take-Home Pay</span>
+                        <span class="breakdown-value savings-highlight" id="annualNetIncome">$45,600</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Annual Retirement Savings</span>
+                        <span class="breakdown-value savings-highlight" id="annualRetirement">$3,000</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Total Taxes Paid</span>
+                        <span class="breakdown-value deduction" id="annualTaxes">$11,400</span>
+                    </div>
+                </div>
+                
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="summary-label">Effective Tax Rate</div>
+                        <div class="summary-value" id="effectiveTaxRate">20%</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Retirement Savings</div>
+                        <div class="summary-value savings-highlight" id="retirementSavings">$3,000</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Tax Savings</div>
+                        <div class="summary-value savings-highlight" id="taxSavings">$750</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container" id="salaryChart">
+                    <!-- Chart will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all input elements
+            const salaryInput = document.getElementById('salary');
+            const salarySlider = document.getElementById('salarySlider');
+            const salaryValue = document.getElementById('salaryValue');
+            
+            const payFrequency = document.getElementById('payFrequency');
+            const filingStatus = document.getElementById('filingStatus');
+            const stateTax = document.getElementById('state');
+            
+            const retirementInput = document.getElementById('retirement');
+            const retirementSlider = document.getElementById('retirementSlider');
+            const retirementValue = document.getElementById('retirementValue');
+            
+            const healthInsuranceInput = document.getElementById('healthInsurance');
+            const healthInsuranceSlider = document.getElementById('healthInsuranceSlider');
+            const healthInsuranceValue = document.getElementById('healthInsuranceValue');
+            
+            const otherDeductionsInput = document.getElementById('otherDeductions');
+            const otherDeductionsSlider = document.getElementById('otherDeductionsSlider');
+            const otherDeductionsValue = document.getElementById('otherDeductionsValue');
+            
+            const calculateBtn = document.getElementById('calculateBtn');
+            const toggleBreakdown = document.getElementById('toggleBreakdown');
+            
+            // Result elements
+            const netSalary = document.getElementById('netSalary');
+            const payFrequencyLabel = document.getElementById('payFrequencyLabel');
+            const grossIncome = document.getElementById('grossIncome');
+            const federalTax = document.getElementById('federalTax');
+            const stateTaxDisplay = document.getElementById('stateTax');
+            const socialSecurityTax = document.getElementById('socialSecurityTax');
+            const medicareTax = document.getElementById('medicareTax');
+            const retirementContribution = document.getElementById('retirementContribution');
+            const healthInsuranceDeduction = document.getElementById('healthInsuranceDeduction');
+            const otherDeductionsDisplay = document.getElementById('otherDeductionsDisplay');
+            const effectiveTaxRate = document.getElementById('effectiveTaxRate');
+            const retirementSavings = document.getElementById('retirementSavings');
+            const taxSavings = document.getElementById('taxSavings');
+            
+            // Yearly breakdown elements
+            const yearlyBreakdown = document.getElementById('yearlyBreakdown');
+            const annualGrossIncome = document.getElementById('annualGrossIncome');
+            const annualNetIncome = document.getElementById('annualNetIncome');
+            const annualRetirement = document.getElementById('annualRetirement');
+            const annualTaxes = document.getElementById('annualTaxes');
+            
+            const salaryChart = document.getElementById('salaryChart');
+            
+            // Format currency
+            function formatCurrency(value) {
+                return '$' + Number(value).toLocaleString('en-US', {maximumFractionDigits: 2, minimumFractionDigits: 2});
+            }
+            
+            // Format percentage
+            function formatPercentage(value) {
+                return value + '%';
+            }
+            
+            // Sync slider and input field
+            function syncSliderAndInput(slider, input, display, formatter, isCurrency = true) {
+                slider.addEventListener('input', function() {
+                    input.value = this.value;
+                    display.textContent = isCurrency ? formatCurrency(this.value) : formatPercentage(this.value);
+                    calculateSalary();
+                });
+                
+                input.addEventListener('input', function() {
+                    slider.value = this.value;
+                    display.textContent = isCurrency ? formatCurrency(this.value) : formatPercentage(this.value);
+                    calculateSalary();
+                });
+            }
+            
+            // Set up sync for all sliders and inputs
+            syncSliderAndInput(salarySlider, salaryInput, salaryValue, formatCurrency, true);
+            syncSliderAndInput(retirementSlider, retirementInput, retirementValue, formatPercentage, false);
+            syncSliderAndInput(healthInsuranceSlider, healthInsuranceInput, healthInsuranceValue, formatCurrency, true);
+            syncSliderAndInput(otherDeductionsSlider, otherDeductionsInput, otherDeductionsValue, formatCurrency, true);
+            
+            // Toggle yearly breakdown
+            toggleBreakdown.addEventListener('click', function() {
+                yearlyBreakdown.classList.toggle('hidden');
+                if (yearlyBreakdown.classList.contains('hidden')) {
+                    this.innerHTML = '<i class="fas fa-chevron-down"></i> Show Yearly Breakdown';
+                } else {
+                    this.innerHTML = '<i class="fas fa-chevron-up"></i> Hide Yearly Breakdown';
+                }
+            });
+            
+            // Add event listeners to dropdowns
+            payFrequency.addEventListener('change', calculateSalary);
+            filingStatus.addEventListener('change', calculateSalary);
+            stateTax.addEventListener('change', calculateSalary);
+            
+            // Calculate federal tax based on 2023 tax brackets
+            function calculateFederalTax(income, status) {
+                let tax = 0;
+                
+                // 2023 tax brackets (simplified)
+                if (status === 'single') {
+                    if (income > 578125) {
+                        tax = 174238.25 + (income - 578125) * 0.37;
+                    } else if (income > 231250) {
+                        tax = 52832 + (income - 231250) * 0.35;
+                    } else if (income > 182100) {
+                        tax = 37104 + (income - 182100) * 0.32;
+                    } else if (income > 95375) {
+                        tax = 16290 + (income - 95375) * 0.24;
+                    } else if (income > 44725) {
+                        tax = 5147 + (income - 44725) * 0.22;
+                    } else if (income > 11000) {
+                        tax = 1100 + (income - 11000) * 0.12;
+                    } else {
+                        tax = income * 0.10;
+                    }
+                } else if (status === 'married') {
+                    if (income > 693750) {
+                        tax = 186601.50 + (income - 693750) * 0.37;
+                    } else if (income > 462500) {
+                        tax = 105664 + (income - 462500) * 0.35;
+                    } else if (income > 364200) {
+                        tax = 74208 + (income - 364200) * 0.32;
+                    } else if (income > 190750) {
+                        tax = 32580 + (income - 190750) * 0.24;
+                    } else if (income > 89450) {
+                        tax = 10294 + (income - 89450) * 0.22;
+                    } else if (income > 22000) {
+                        tax = 2200 + (income - 22000) * 0.12;
+                    } else {
+                        tax = income * 0.10;
+                    }
+                } else { // head of household
+                    if (income > 578100) {
+                        tax = 172623.50 + (income - 578100) * 0.37;
+                    } else if (income > 231250) {
+                        tax = 52222 + (income - 231250) * 0.35;
+                    } else if (income > 182100) {
+                        tax = 36179 + (income - 182100) * 0.32;
+                    } else if (income > 95350) {
+                        tax = 15686 + (income - 95350) * 0.24;
+                    } else if (income > 59850) {
+                        tax = 6868 + (income - 59850) * 0.22;
+                    } else if (income > 15700) {
+                        tax = 1570 + (income - 15700) * 0.12;
+                    } else {
+                        tax = income * 0.10;
+                    }
+                }
+                
+                return tax;
+            }
+            
+            // Calculate salary function
+            function calculateSalary() {
+                // Get input values
+                const annualSalary = parseFloat(salaryInput.value);
+                const payFreq = parseFloat(payFrequency.value);
+                const status = filingStatus.value;
+                const stateRate = parseFloat(stateTax.value) / 100;
+                const retirementPercent = parseFloat(retirementInput.value) / 100;
+                const healthInsurance = parseFloat(healthInsuranceInput.value);
+                const otherDeductions = parseFloat(otherDeductionsInput.value);
+                
+                // Calculate gross pay per period
+                const grossPayPerPeriod = annualSalary / payFreq;
+                
+                // Calculate retirement contribution
+                const retirementContributionAnnual = annualSalary * retirementPercent;
+                const retirementContributionPerPeriod = retirementContributionAnnual / payFreq;
+                
+                // Calculate taxes
+                const federalTaxAnnual = calculateFederalTax(annualSalary, status);
+                const federalTaxPerPeriod = federalTaxAnnual / payFreq;
+                
+                const stateTaxAnnual = annualSalary * stateRate;
+                const stateTaxPerPeriod = stateTaxAnnual / payFreq;
+                
+                const socialSecurityTaxAnnual = annualSalary * 0.062;
+                const socialSecurityTaxPerPeriod = socialSecurityTaxAnnual / payFreq;
+                
+                const medicareTaxAnnual = annualSalary * 0.0145;
+                const medicareTaxPerPeriod = medicareTaxAnnual / payFreq;
+                
+                // Calculate tax savings from retirement contributions
+                const taxSavingsAmount = retirementContributionAnnual * 0.25; // Simplified estimation
+                
+                // Calculate total deductions per period
+                const totalDeductionsPerPeriod = federalTaxPerPeriod + stateTaxPerPeriod + 
+                                                socialSecurityTaxPerPeriod + medicareTaxPerPeriod +
+                                                retirementContributionPerPeriod + 
+                                                (healthInsurance * 12 / payFreq) + 
+                                                (otherDeductions * 12 / payFreq);
+                
+                // Calculate net pay per period
+                const netPayPerPeriod = grossPayPerPeriod - totalDeductionsPerPeriod;
+                
+                // Calculate effective tax rate
+                const totalTaxes = federalTaxAnnual + stateTaxAnnual + socialSecurityTaxAnnual + medicareTaxAnnual;
+                const effectiveTaxRateValue = (totalTaxes / annualSalary) * 100;
+                
+                // Update UI
+                netSalary.textContent = formatCurrency(netPayPerPeriod);
+                
+                // Update pay frequency label
+                const frequencyText = payFrequency.options[payFrequency.selectedIndex].text;
+                payFrequencyLabel.textContent = `per ${frequencyText.toLowerCase()}`;
+                
+                grossIncome.textContent = formatCurrency(grossPayPerPeriod);
+                federalTax.textContent = '-' + formatCurrency(federalTaxPerPeriod);
+                stateTaxDisplay.textContent = '-' + formatCurrency(stateTaxPerPeriod);
+                socialSecurityTax.textContent = '-' + formatCurrency(socialSecurityTaxPerPeriod);
+                medicareTax.textContent = '-' + formatCurrency(medicareTaxPerPeriod);
+                retirementContribution.textContent = '-' + formatCurrency(retirementContributionPerPeriod);
+                healthInsuranceDeduction.textContent = '-' + formatCurrency(healthInsurance * 12 / payFreq);
+                otherDeductionsDisplay.textContent = '-' + formatCurrency(otherDeductions * 12 / payFreq);
+                
+                effectiveTaxRate.textContent = effectiveTaxRateValue.toFixed(1) + '%';
+                retirementSavings.textContent = formatCurrency(retirementContributionAnnual);
+                taxSavings.textContent = formatCurrency(taxSavingsAmount);
+                
+                // Update yearly breakdown
+                annualGrossIncome.textContent = formatCurrency(annualSalary);
+                annualNetIncome.textContent = formatCurrency(netPayPerPeriod * payFreq);
+                annualRetirement.textContent = formatCurrency(retirementContributionAnnual);
+                annualTaxes.textContent = formatCurrency(totalTaxes);
+                
+                // Generate chart
+                generateChart(grossPayPerPeriod, federalTaxPerPeriod, stateTaxPerPeriod, 
+                            socialSecurityTaxPerPeriod, medicareTaxPerPeriod, 
+                            retirementContributionPerPeriod, 
+                            healthInsurance * 12 / payFreq, 
+                            otherDeductions * 12 / payFreq);
+            }
+            
+            // Generate chart function
+            function generateChart(gross, federal, state, socialSecurity, medicare, retirement, health, other) {
+                salaryChart.innerHTML = '';
+                
+                const net = gross - (federal + state + socialSecurity + medicare + retirement + health + other);
+                
+                const components = [
+                    {value: net, label: 'Take Home', color: '#2ecc71'},
+                    {value: federal, label: 'Federal Tax', color: '#e74c3c'},
+                    {value: state, label: 'State Tax', color: '#ff9f43'},
+                    {value: socialSecurity, label: 'Social Security', color: '#546de5'},
+                    {value: medicare, label: 'Medicare', color: '#f368e0'},
+                    {value: retirement, label: 'Retirement', color: '#3498db'},
+                    {value: health, label: 'Health Insurance', color: '#9b59b6'},
+                    {value: other, label: 'Other', color: '#95a5a6'}
+                ];
+                
+                const maxHeight = 180;
+                const maxValue = Math.max(gross, ...components.map(c => c.value));
+                
+                components.forEach(component => {
+                    if (component.value > 0) {
+                        const height = (component.value / maxValue) * maxHeight;
+                        const bar = document.createElement('div');
+                        bar.className = 'chart-bar';
+                        bar.style.height = height + 'px';
+                        bar.style.background = component.color;
+                        
+                        const label = document.createElement('div');
+                        label.className = 'chart-bar-label';
+                        label.textContent = component.label;
+                        
+                        const valueLabel = document.createElement('div');
+                        valueLabel.className = 'chart-bar-value';
+                        valueLabel.style.position = 'absolute';
+                        valueLabel.style.top = '-20px';
+                        valueLabel.style.width = '100%';
+                        valueLabel.style.textAlign = 'center';
+                        valueLabel.style.fontSize = '0.7rem';
+                        valueLabel.textContent = formatCurrency(component.value);
+                        
+                        bar.appendChild(valueLabel);
+                        bar.appendChild(label);
+                        salaryChart.appendChild(bar);
+                    }
+                });
+            }
+            
+            // Initial calculation
+            calculateSalary();
+            
+            // Add event listener to calculate button
+            calculateBtn.addEventListener('click', calculateSalary);
+        });
+    </script>
+</body>
+</html>
