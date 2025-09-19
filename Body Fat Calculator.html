@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Fat Calculator - Health Assessment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .calculator-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .result-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            background: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin-top: 5px;
+        }
+        
+        .slider-value {
+            text-align: center;
+            font-weight: 600;
+            color: #3498db;
+            margin-top: 5px;
+            background: #eef7ff;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        
+        .units-toggle {
+            display: flex;
+            background: #e9ecef;
+            border-radius: 8px;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .unit-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        
+        .unit-btn.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .result-box {
+            text-align: center;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+        
+        .bodyfat-value {
+            font-size: 3rem;
+            color: #2c3e50;
+            font-weight: 700;
+            margin: 15px 0;
+        }
+        
+        .bodyfat-category {
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .result-label {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+        
+        .bodyfat-scale {
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(90deg, #3498db, #2ecc71, #f1c40f, #e74c3c);
+            border-radius: 15px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .bodyfat-indicator {
+            position: absolute;
+            top: -10px;
+            width: 20px;
+            height: 50px;
+            background: #2c3e50;
+            border-radius: 10px;
+            transform: translateX(-50%);
+        }
+        
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+        
+        .recommendations {
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .recommendations h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .recommendations p {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .info-section {
+            width: 100%;
+            padding: 30px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .info-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .info-card {
+            flex: 1;
+            min-width: 250px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .info-card ul {
+            list-style-type: none;
+        }
+        
+        .info-card li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .info-card li:before {
+            content: "•";
+            color: #3498db;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .measurement-guide {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .measurement-guide h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 1200px;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-container {
+                flex-direction: column;
+            }
+            
+            .bodyfat-value {
+                font-size: 2.2rem;
+            }
+        }
+        
+        .icon {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .category-essential {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .category-athlete {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .category-fitness {
+            background-color: #f1c40f;
+            color: white;
+        }
+        
+        .category-average {
+            background-color: #e67e22;
+            color: white;
+        }
+        
+        .category-obese {
+            background-color: #e74c3c;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-weight-scale icon"></i>Body Fat Calculator</h1>
+            <p class="subtitle">Estimate your body fat percentage using the U.S. Navy method</p>
+        </header>
+        
+        <div class="calculator-container">
+            <div class="input-section">
+                <div class="units-toggle">
+                    <div class="unit-btn active" id="metric-btn">Metric (cm)</div>
+                    <div class="unit-btn" id="imperial-btn">Imperial (inches)</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="gender"><i class="fas fa-venus-mars icon"></i>Gender</label>
+                    <select id="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="height"><i class="fas fa-ruler-vertical icon"></i>Height</label>
+                    <input type="number" id="height" min="100" max="250" step="1" value="170">
+                    <input type="range" id="heightSlider" min="100" max="250" step="1" value="170">
+                    <div class="slider-value" id="heightValue">170 cm</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="weight"><i class="fas fa-weight-hanging icon"></i>Weight</label>
+                    <input type="number" id="weight" min="30" max="200" step="1" value="70">
+                    <input type="range" id="weightSlider" min="30" max="200" step="1" value="70">
+                    <div class="slider-value" id="weightValue">70 kg</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="neck"><i class="fas fa-ruler icon"></i>Neck Circumference</label>
+                    <input type="number" id="neck" min="20" max="60" step="0.1" value="38">
+                    <input type="range" id="neckSlider" min="20" max="60" step="0.1" value="38">
+                    <div class="slider-value" id="neckValue">38 cm</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="waist"><i class="fas fa-ruler icon"></i>Waist Circumference</label>
+                    <input type="number" id="waist" min="50" max="150" step="0.1" value="80">
+                    <input type="range" id="waistSlider" min="50" max="150" step="0.1" value="80">
+                    <div class="slider-value" id="waistValue">80 cm</div>
+                </div>
+                
+                <div class="input-group" id="hipGroup">
+                    <label for="hip"><i class="fas fa-ruler icon"></i>Hip Circumference (Women)</label>
+                    <input type="number" id="hip" min="60" max="150" step="0.1" value="100">
+                    <input type="range" id="hipSlider" min="60" max="150" step="0.1" value="100">
+                    <div class="slider-value" id="hipValue">100 cm</div>
+                </div>
+                
+                <button id="calculateBtn"><i class="fas fa-calculator icon"></i>Calculate Body Fat</button>
+                
+                <div class="measurement-guide">
+                    <h4><i class="fas fa-info-circle icon"></i>Measurement Guide</h4>
+                    <p><strong>Neck:</strong> Measure below the larynx with tape sloping slightly downward</p>
+                    <p><strong>Waist:</strong> Measure at the navel level (men) or smallest circumference (women)</p>
+                    <p><strong>Hip:</strong> Measure at the largest circumference (women only)</p>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <div class="result-box">
+                    <p class="result-label">Your Body Fat Percentage is</p>
+                    <div class="bodyfat-value" id="bodyfatValue">18.5%</div>
+                    <div class="bodyfat-category category-fitness" id="bodyfatCategory">Fitness</div>
+                </div>
+                
+                <div class="bodyfat-scale">
+                    <div class="bodyfat-indicator" id="bodyfatIndicator" style="left: 40%;"></div>
+                </div>
+                
+                <div class="scale-labels">
+                    <span>Essential<br>2-5% (M)<br>10-13% (F)</span>
+                    <span>Athlete<br>6-13% (M)<br>14-20% (F)</span>
+                    <span>Fitness<br>14-17% (M)<br>21-24% (F)</span>
+                    <span>Average<br>18-24% (M)<br>25-31% (F)</span>
+                    <span>Obese<br>25%+ (M)<br>32%+ (F)</span>
+                </div>
+                
+                <div class="recommendations">
+                    <h3><i class="fas fa-lightbulb icon"></i>Health Recommendations</h3>
+                    <p id="recommendationText">Maintain your current body fat percentage with a balanced diet and regular exercise. Consider strength training to maintain muscle mass.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h2><i class="fas fa-info-circle icon"></i>About Body Fat Percentage</h2>
+            <div class="info-content">
+                <div class="info-card">
+                    <h3>What is Body Fat Percentage?</h3>
+                    <p>Body fat percentage is the total mass of fat divided by total body mass, multiplied by 100. It includes both essential fat and storage fat.</p>
+                    <p>Unlike BMI, body fat percentage distinguishes between fat mass and lean mass, providing a more accurate health assessment.</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>Why It Matters</h3>
+                    <p>Knowing your body fat percentage can help you:</p>
+                    <ul>
+                        <li>Assess your health risks more accurately than BMI</li>
+                        <li>Track fitness progress more effectively</li>
+                        <li>Set appropriate weight management goals</li>
+                        <li>Understand your body composition better</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3>Measurement Methods</h3>
+                    <p>Several methods exist for measuring body fat:</p>
+                    <ul>
+                        <li>Skinfold calipers (anthropometric method)</li>
+                        <li>Bioelectrical impedance analysis (BIA)</li>
+                        <li>Dual-energy X-ray absorptiometry (DXA)</li>
+                        <li>Hydrostatic weighing</li>
+                        <li>U.S. Navy circumference method (used in this calculator)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Body Fat Calculator. This tool provides estimates based on the U.S. Navy method. For medical advice, consult a healthcare professional.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all input elements
+            const heightInput = document.getElementById('height');
+            const heightSlider = document.getElementById('heightSlider');
+            const heightValue = document.getElementById('heightValue');
+            
+            const weightInput = document.getElementById('weight');
+            const weightSlider = document.getElementById('weightSlider');
+            const weightValue = document.getElementById('weightValue');
+            
+            const neckInput = document.getElementById('neck');
+            const neckSlider = document.getElementById('neckSlider');
+            const neckValue = document.getElementById('neckValue');
+            
+            const waistInput = document.getElementById('waist');
+            const waistSlider = document.getElementById('waistSlider');
+            const waistValue = document.getElementById('waistValue');
+            
+            const hipInput = document.getElementById('hip');
+            const hipSlider = document.getElementById('hipSlider');
+            const hipValue = document.getElementById('hipValue');
+            const hipGroup = document.getElementById('hipGroup');
+            
+            const genderSelect = document.getElementById('gender');
+            
+            const calculateBtn = document.getElementById('calculateBtn');
+            
+            const bodyfatValue = document.getElementById('bodyfatValue');
+            const bodyfatCategory = document.getElementById('bodyfatCategory');
+            const bodyfatIndicator = document.getElementById('bodyfatIndicator');
+            const recommendationText = document.getElementById('recommendationText');
+            
+            const metricBtn = document.getElementById('metric-btn');
+            const imperialBtn = document.getElementById('imperial-btn');
+            
+            let isMetric = true;
+            
+            // Show/hide hip input based on gender
+            function toggleHipInput() {
+                if (genderSelect.value === 'female') {
+                    hipGroup.style.display = 'block';
+                } else {
+                    hipGroup.style.display = 'none';
+                }
+            }
+            
+            // Initialize
+            toggleHipInput();
+            
+            // Sync slider and input values
+            function syncInputAndSlider(input, slider, valueDisplay, formatFunc, unit) {
+                input.addEventListener('input', function() {
+                    slider.value = this.value;
+                    valueDisplay.textContent = formatFunc(this.value, unit);
+                    calculateBodyFat();
+                });
+                
+                slider.addEventListener('input', function() {
+                    input.value = this.value;
+                    valueDisplay.textContent = formatFunc(this.value, unit);
+                    calculateBodyFat();
+                });
+            }
+            
+            // Format metric values
+            function formatMetric(value, unit) {
+                return value + ' ' + unit;
+            }
+            
+            // Format imperial values
+            function formatImperial(value, unit) {
+                return value + ' ' + unit;
+            }
+            
+            // Convert between metric and imperial
+            function cmToInches(cm) {
+                return (cm / 2.54).toFixed(1);
+            }
+            
+            function inchesToCm(inches) {
+                return (inches * 2.54).toFixed(1);
+            }
+            
+            function kgToLbs(kg) {
+                return (kg * 2.20462).toFixed(1);
+            }
+            
+            function lbsToKg(lbs) {
+                return (lbs / 2.20462).toFixed(1);
+            }
+            
+            // Switch between metric and imperial
+            metricBtn.addEventListener('click', function() {
+                if (!isMetric) {
+                    isMetric = true;
+                    metricBtn.classList.add('active');
+                    imperialBtn.classList.remove('active');
+                    
+                    // Convert all measurements from imperial to metric
+                    heightInput.value = inchesToCm(heightInput.value);
+                    heightSlider.value = heightInput.value;
+                    heightValue.textContent = formatMetric(heightInput.value, 'cm');
+                    
+                    weightInput.value = lbsToKg(weightInput.value);
+                    weightSlider.value = weightInput.value;
+                    weightValue.textContent = formatMetric(weightInput.value, 'kg');
+                    
+                    neckInput.value = inchesToCm(neckInput.value);
+                    neckSlider.value = neckInput.value;
+                    neckValue.textContent = formatMetric(neckInput.value, 'cm');
+                    
+                    waistInput.value = inchesToCm(waistInput.value);
+                    waistSlider.value = waistInput.value;
+                    waistValue.textContent = formatMetric(waistInput.value, 'cm');
+                    
+                    hipInput.value = inchesToCm(hipInput.value);
+                    hipSlider.value = hipInput.value;
+                    hipValue.textContent = formatMetric(hipInput.value, 'cm');
+                    
+                    calculateBodyFat();
+                }
+            });
+            
+            imperialBtn.addEventListener('click', function() {
+                if (isMetric) {
+                    isMetric = false;
+                    imperialBtn.classList.add('active');
+                    metricBtn.classList.remove('active');
+                    
+                    // Convert all measurements from metric to imperial
+                    heightInput.value = cmToInches(heightInput.value);
+                    heightSlider.value = heightInput.value;
+                    heightValue.textContent = formatImperial(heightInput.value, 'in');
+                    
+                    weightInput.value = kgToLbs(weightInput.value);
+                    weightSlider.value = weightInput.value;
+                    weightValue.textContent = formatImperial(weightInput.value, 'lbs');
+                    
+                    neckInput.value = cmToInches(neckInput.value);
+                    neckSlider.value = neckInput.value;
+                    neckValue.textContent = formatImperial(neckInput.value, 'in');
+                    
+                    waistInput.value = cmToInches(waistInput.value);
+                    waistSlider.value = waistInput.value;
+                    waistValue.textContent = formatImperial(waistInput.value, 'in');
+                    
+                    hipInput.value = cmToInches(hipInput.value);
+                    hipSlider.value = hipInput.value;
+                    hipValue.textContent = formatImperial(hipInput.value, 'in');
+                    
+                    calculateBodyFat();
+                }
+            });
+            
+            // Initialize sync for inputs
+            syncInputAndSlider(heightInput, heightSlider, heightValue, isMetric ? formatMetric : formatImperial, isMetric ? 'cm' : 'in');
+            syncInputAndSlider(weightInput, weightSlider, weightValue, isMetric ? formatMetric : formatImperial, isMetric ? 'kg' : 'lbs');
+            syncInputAndSlider(neckInput, neckSlider, neckValue, isMetric ? formatMetric : formatImperial, isMetric ? 'cm' : 'in');
+            syncInputAndSlider(waistInput, waistSlider, waistValue, isMetric ? formatMetric : formatImperial, isMetric ? 'cm' : 'in');
+            syncInputAndSlider(hipInput, hipSlider, hipValue, isMetric ? formatMetric : formatImperial, isMetric ? 'cm' : 'in');
+            
+            // Gender change listener
+            genderSelect.addEventListener('change', function() {
+                toggleHipInput();
+                calculateBodyFat();
+            });
+            
+            // Calculate Body Fat function using U.S. Navy method
+            function calculateBodyFat() {
+                let height, neck, waist, hip, bodyfat;
+                
+                if (isMetric) {
+                    // Use metric measurements directly
+                    height = parseFloat(heightInput.value);
+                    neck = parseFloat(neckInput.value);
+                    waist = parseFloat(waistInput.value);
+                    hip = parseFloat(hipInput.value);
+                } else {
+                    // Convert imperial measurements to metric for calculation
+                    height = parseFloat(heightInput.value) * 2.54;
+                    neck = parseFloat(neckInput.value) * 2.54;
+                    waist = parseFloat(waistInput.value) * 2.54;
+                    hip = parseFloat(hipInput.value) * 2.54;
+                }
+                
+                // Apply the U.S. Navy formula
+                if (genderSelect.value === 'male') {
+                    // Formula for men
+                    bodyfat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+                } else {
+                    // Formula for women
+                    bodyfat = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(height)) - 450;
+                }
+                
+                // Update UI
+                bodyfatValue.textContent = bodyfat.toFixed(1) + '%';
+                
+                // Determine category based on gender and body fat percentage
+                let category, recommendation;
+                
+                if (genderSelect.value === 'male') {
+                    if (bodyfat < 6) {
+                        category = "Essential Fat";
+                        bodyfatCategory.className = "bodyfat-category category-essential";
+                        recommendation = "Your body fat percentage is at essential levels. Consider consulting with a healthcare provider to ensure you're maintaining adequate fat stores for proper physiological function.";
+                    } else if (bodyfat >= 6 && bodyfat < 14) {
+                        category = "Athlete";
+                        bodyfatCategory.className = "bodyfat-category category-athlete";
+                        recommendation = "You have an athletic body fat percentage. Maintain with regular exercise and a balanced diet focused on nutrient-dense foods.";
+                    } else if (bodyfat >= 14 && bodyfat < 18) {
+                        category = "Fitness";
+                        bodyfatCategory.className = "bodyfat-category category-fitness";
+                        recommendation = "You have a fitness-level body fat percentage. Maintain your current regimen with a focus on both cardio and strength training.";
+                    } else if (bodyfat >= 18 && bodyfat < 25) {
+                        category = "Average";
+                        bodyfatCategory.className = "bodyfat-category category-average";
+                        recommendation = "You're in the average range. Consider incorporating more physical activity and making small dietary adjustments to improve your body composition.";
+                    } else {
+                        category = "Obese";
+                        bodyfatCategory.className = "bodyfat-category category-obese";
+                        recommendation = "Your body fat percentage indicates potential health risks. Focus on gradual fat loss through dietary changes and increased physical activity. Consult with a healthcare provider for personalized guidance.";
+                    }
+                } else {
+                    if (bodyfat < 14) {
+                        category = "Essential Fat";
+                        bodyfatCategory.className = "bodyfat-category category-essential";
+                        recommendation = "Your body fat percentage is at essential levels. Consider consulting with a healthcare provider to ensure you're maintaining adequate fat stores for proper physiological function.";
+                    } else if (bodyfat >= 14 && bodyfat < 21) {
+                        category = "Athlete";
+                        bodyfatCategory.className = "bodyfat-category category-athlete";
+                        recommendation = "You have an athletic body fat percentage. Maintain with regular exercise and a balanced diet focused on nutrient-dense foods.";
+                    } else if (bodyfat >= 21 && bodyfat < 25) {
+                        category = "Fitness";
+                        bodyfatCategory.className = "bodyfat-category category-fitness";
+                        recommendation = "You have a fitness-level body fat percentage. Maintain your current regimen with a focus on both cardio and strength training.";
+                    } else if (bodyfat >= 25 && bodyfat < 32) {
+                        category = "Average";
+                        bodyfatCategory.className = "bodyfat-category category-average";
+                        recommendation = "You're in the average range. Consider incorporating more physical activity and making small dietary adjustments to improve your body composition.";
+                    } else {
+                        category = "Obese";
+                        bodyfatCategory.className = "bodyfat-category category-obese";
+                        recommendation = "Your body fat percentage indicates potential health risks. Focus on gradual fat loss through dietary changes and increased physical activity. Consult with a healthcare provider for personalized guidance.";
+                    }
+                }
+                
+                bodyfatCategory.textContent = category;
+                recommendationText.textContent = recommendation;
+                
+                // Update indicator position on scale
+                let position;
+                if (genderSelect.value === 'male') {
+                    if (bodyfat < 6) {
+                        position = (bodyfat / 6) * 20;
+                    } else if (bodyfat < 14) {
+                        position = 20 + ((bodyfat - 6) / (14 - 6)) * 20;
+                    } else if (bodyfat < 18) {
+                        position = 40 + ((bodyfat - 14) / (18 - 14)) * 20;
+                    } else if (bodyfat < 25) {
+                        position = 60 + ((bodyfat - 18) / (25 - 18)) * 20;
+                    } else {
+                        position = 80 + (Math.min(bodyfat - 25, 15) / 15) * 20;
+                    }
+                } else {
+                    if (bodyfat < 14) {
+                        position = (bodyfat / 14) * 20;
+                    } else if (bodyfat < 21) {
+                        position = 20 + ((bodyfat - 14) / (21 - 14)) * 20;
+                    } else if (bodyfat < 25) {
+                        position = 40 + ((bodyfat - 21) / (25 - 21)) * 20;
+                    } else if (bodyfat < 32) {
+                        position = 60 + ((bodyfat - 25) / (32 - 25)) * 20;
+                    } else {
+                        position = 80 + (Math.min(bodyfat - 32, 18) / 18) * 20;
+                    }
+                }
+                
+                bodyfatIndicator.style.left = `${position}%`;
+            }
+            
+            // Initial calculation
+            calculateBodyFat();
+            
+            // Add event listener to calculate button
+            calculateBtn.addEventListener('click', calculateBodyFat);
+        });
+    </script>
+</body>
+</html>
